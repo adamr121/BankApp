@@ -10,15 +10,58 @@ import java.awt.event.ActionListener;
 
 public class MoneyForm extends JFrame {
     private final BoUser user;
-    public MoneyForm(String title, BoUser p_user) {
+    private JTextField TFInsertAmount;
+    BankGUI bankMainPage;
+    private final ActionListener onDeposit = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(!TFInsertAmount.getText().isEmpty()){
+                try{
+                    float amount = Float.parseFloat(TFInsertAmount.getText());
+                    if (amount <= 0) {
+                        JOptionPane.showMessageDialog(MoneyForm.this, "Input value has to be more than 0!");
+                        return;
+                    }
+                    float newAmount = user.getAmount()+amount;
+                    user.setAmount(newAmount);
+                    bankMainPage.LAmount.setText(Float.toString(newAmount));
+                    dispose();
+                }catch(NumberFormatException exception){
+                    JOptionPane.showMessageDialog(MoneyForm.this, "Invalid input!");
+                }
+            }
+        }
+    };
+    private final ActionListener onWithDraw = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(!TFInsertAmount.getText().isEmpty()){
+                try{
+                    float amount = Float.parseFloat(TFInsertAmount.getText());
+                    if (amount > user.getAmount()) {
+                        JOptionPane.showMessageDialog(MoneyForm.this, "Value to withdraw too big for this account");
+                        return;
+                    }
+                    float newAmount = user.getAmount() - amount;
+                    user.setAmount(newAmount);
+                    bankMainPage.LAmount.setText(Float.toString(newAmount));
+                    dispose();
+                }catch(NumberFormatException exception){
+                    JOptionPane.showMessageDialog(MoneyForm.this, "Invalid input!");
+                }
+            }
+        }
+    };
+    public MoneyForm(String title, BoUser user, BankGUI bankGui) {
         super(title);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(450, 500);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(bankGui);
         setLayout(null);
         setResizable(false);
         getContentPane().setBackground(CommonConstants.PRIMARY_COLOR);
-        user = p_user;
+        this.user = user;
+        this.bankMainPage = bankGui;
         addGuiComponents();
     }
     private void addGuiComponents(){
@@ -36,7 +79,7 @@ public class MoneyForm extends JFrame {
         LEnterAmount.setFont(new Font("Dialog", Font.PLAIN, 24));
         add(LEnterAmount);
 
-        JTextField TFInsertAmount = new JTextField("");
+        TFInsertAmount = new JTextField("");
         TFInsertAmount.setBounds(10, 150, 415, 30);
         TFInsertAmount.setForeground(CommonConstants.TEXT_COLOR);
         TFInsertAmount.setBackground(CommonConstants.SECONDARY_COLOR);
@@ -50,16 +93,8 @@ public class MoneyForm extends JFrame {
         BAction.setHorizontalAlignment(SwingConstants.CENTER);
         BAction.setBackground(CommonConstants.TEXT_COLOR);
         BAction.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        BAction.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(!TFInsertAmount.getText().isEmpty()){
-                    float amount = Float.parseFloat(TFInsertAmount.getText());
-                    user.setAmount(user.getAmount()+amount);
-                    dispose();
-                }
-            }
-        });
+        if(getTitle().equals("Deposit")) BAction.addActionListener(onDeposit);
+        else if (getTitle().equals("Withdraw")) BAction.addActionListener(onWithDraw);
         add(BAction);
     }
 }

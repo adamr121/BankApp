@@ -8,11 +8,11 @@ public class BoUser {
     private final String username;
     private float amount;
 
-    public BoUser (int p_id) {
-        ResultSet user = MyJDBC.getUser(p_id);
+    public BoUser (int id) {
+        ResultSet user = MyJDBC.getUser(id);
         try {
             user.next();
-            id = user.getInt("idusers");
+            this.id = user.getInt("idusers");
             username = user.getString("username");
             amount = user.getFloat("stan_konta");
         } catch (SQLException e) {
@@ -28,8 +28,8 @@ public class BoUser {
     public float getAmount() {
         return amount;
     }
-    public void setAmount(float new_amount){
-        amount = new_amount;
+    public void setAmount(float amount){
+        this.amount = amount;
         MyJDBC.updateUserAmount(id, amount);
     }
 }

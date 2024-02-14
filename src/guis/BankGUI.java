@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 public class BankGUI extends Form {
     private final BoUser user;
-    private JLabel LAmount;
+    public JLabel LAmount;
     private final ActionListener onDeposit = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -40,7 +40,7 @@ public class BankGUI extends Form {
         LBilans.setFont(new Font("Dialog", Font.PLAIN, 24));
         add(LBilans);
 
-        LAmount = new JLabel(String.valueOf(user.getAmount())+" zl");
+        LAmount = new JLabel(String.format("%.2f", user.getAmount()) + " zl");
         LAmount.setBounds(180, 90, 400, 25);
         LAmount.setForeground(CommonConstants.TEXT_COLOR);
         LAmount.setFont(new Font("Dialog", Font.PLAIN, 30));
@@ -74,13 +74,9 @@ public class BankGUI extends Form {
         add(BHistory);
     }
     private void deposit(){
-        MoneyForm moneyf = new MoneyForm("Deposit", user);
-        moneyf.setVisible(true);
-        while(moneyf.isActive()){}
-        LAmount.setText(String.valueOf(user.getAmount()));
-
+        new MoneyForm("Deposit", user, this).setVisible(true);
     }
     private void withdraw(){
-
+        new MoneyForm("Withdraw", user, this).setVisible(true);
     }
 }
