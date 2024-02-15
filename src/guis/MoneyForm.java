@@ -1,7 +1,8 @@
 package guis;
 
-import constants.CommonConstants;
+import constants.Constants;
 import db.BoUser;
+import db.MyJDBC;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +26,7 @@ public class MoneyForm extends JFrame {
                     float newAmount = user.getAmount()+amount;
                     user.setAmount(newAmount);
                     bankMainPage.LAmount.setText(Float.toString(newAmount));
+                    MyJDBC.recordTransaction(user.getId(), amount);
                     dispose();
                 }catch(NumberFormatException exception){
                     JOptionPane.showMessageDialog(MoneyForm.this, "Invalid input!");
@@ -45,6 +47,7 @@ public class MoneyForm extends JFrame {
                     float newAmount = user.getAmount() - amount;
                     user.setAmount(newAmount);
                     bankMainPage.LAmount.setText(Float.toString(newAmount));
+                    MyJDBC.recordTransaction(user.getId(), amount * - 1);
                     dispose();
                 }catch(NumberFormatException exception){
                     JOptionPane.showMessageDialog(MoneyForm.this, "Invalid input!");
@@ -59,7 +62,7 @@ public class MoneyForm extends JFrame {
         setLocationRelativeTo(bankGui);
         setLayout(null);
         setResizable(false);
-        getContentPane().setBackground(CommonConstants.PRIMARY_COLOR);
+        getContentPane().setBackground(Constants.PRIMARY_COLOR);
         this.user = user;
         this.bankMainPage = bankGui;
         addGuiComponents();
@@ -67,22 +70,22 @@ public class MoneyForm extends JFrame {
     private void addGuiComponents(){
         JLabel LBalance = new JLabel("Balance: " + user.getAmount());
         LBalance.setBounds(0, 50, 450, 25);
-        LBalance.setForeground(CommonConstants.TEXT_COLOR);
+        LBalance.setForeground(Constants.TEXT_COLOR);
         LBalance.setHorizontalAlignment(SwingConstants.CENTER);
         LBalance.setFont(new Font("Dialog", Font.PLAIN, 24));
         add(LBalance);
 
         JLabel LEnterAmount = new JLabel("Enter Amount:");
         LEnterAmount.setBounds(0, 100, 450, 25);
-        LEnterAmount.setForeground(CommonConstants.TEXT_COLOR);
+        LEnterAmount.setForeground(Constants.TEXT_COLOR);
         LEnterAmount.setHorizontalAlignment(SwingConstants.CENTER);
         LEnterAmount.setFont(new Font("Dialog", Font.PLAIN, 24));
         add(LEnterAmount);
 
         TFInsertAmount = new JTextField("");
         TFInsertAmount.setBounds(10, 150, 415, 30);
-        TFInsertAmount.setForeground(CommonConstants.TEXT_COLOR);
-        TFInsertAmount.setBackground(CommonConstants.SECONDARY_COLOR);
+        TFInsertAmount.setForeground(Constants.TEXT_COLOR);
+        TFInsertAmount.setBackground(Constants.SECONDARY_COLOR);
         TFInsertAmount.setHorizontalAlignment(SwingConstants.CENTER);
         TFInsertAmount.setFont(new Font("Dialog", Font.PLAIN, 30));
         add(TFInsertAmount);
@@ -91,7 +94,7 @@ public class MoneyForm extends JFrame {
         BAction.setBounds(10, 400, 415, 50);
         BAction.setFont(new Font("Dialog", Font.BOLD, 18));
         BAction.setHorizontalAlignment(SwingConstants.CENTER);
-        BAction.setBackground(CommonConstants.TEXT_COLOR);
+        BAction.setBackground(Constants.TEXT_COLOR);
         BAction.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         if(getTitle().equals("Deposit")) BAction.addActionListener(onDeposit);
         else if (getTitle().equals("Withdraw")) BAction.addActionListener(onWithDraw);

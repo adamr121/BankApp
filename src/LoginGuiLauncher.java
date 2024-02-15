@@ -1,6 +1,5 @@
-import constants.CommonConstants;
+import constants.Constants;
 import db.MyJDBC;
-import guis.BankGUI;
 import guis.LoginGui;
 
 import javax.swing.*;
@@ -16,14 +15,12 @@ public class LoginGuiLauncher {
                 //new LoginGui().setVisible(true);
 
                 try{
-                    Connection connection = DriverManager.getConnection(CommonConstants.DB_URL, CommonConstants.DB_USERNAME, CommonConstants.DB_PASSWORD);
+                    Connection connection = DriverManager.getConnection(Constants.DB_URL, Constants.DB_USERNAME, Constants.DB_PASSWORD);
                     MyJDBC.setConnection(connection);
-                    new BankGUI(1).setVisible(true);
+                    new LoginGui().setVisible(true);
                 } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                    System.out.println("Connection to database could not be established");
                 }
-                //new RegisterGUI().setVisible(true);
-                System.out.println(MyJDBC.validateLogin("adamr121", "dupa"));
             }
         });
     }

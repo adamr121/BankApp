@@ -1,30 +1,20 @@
 package guis;
 
-import constants.CommonConstants;
+import constants.Constants;
 import db.BoUser;
-import db.MyJDBC;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
+
 
 public class BankGUI extends Form {
     private final BoUser user;
     public JLabel LAmount;
-    private final ActionListener onDeposit = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            deposit();
-        }
-    };
-    private final ActionListener onWithdraw = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            withdraw();
-        }
-    };
+    private final ActionListener onDeposit = e -> deposit();
+    private final ActionListener onWithdraw = e -> withdraw();
+    private final ActionListener onLogout = e -> logout();
+
     public BankGUI(int p_user_id){
         super("Bank");
         user = new BoUser(p_user_id);
@@ -36,20 +26,20 @@ public class BankGUI extends Form {
     private void addGuiComponents(){
         JLabel LBilans = new JLabel("Bilance:");
         LBilans.setBounds(200, 50, 400, 25);
-        LBilans.setForeground(CommonConstants.TEXT_COLOR);
+        LBilans.setForeground(Constants.TEXT_COLOR);
         LBilans.setFont(new Font("Dialog", Font.PLAIN, 24));
         add(LBilans);
 
         LAmount = new JLabel(String.format("%.2f", user.getAmount()) + " zl");
         LAmount.setBounds(180, 90, 400, 25);
-        LAmount.setForeground(CommonConstants.TEXT_COLOR);
+        LAmount.setForeground(Constants.TEXT_COLOR);
         LAmount.setFont(new Font("Dialog", Font.PLAIN, 30));
         add(LAmount);
 
         JButton BDeposit = new JButton("Deposit");
         BDeposit.setFont(new Font("Dialog", Font.BOLD, 18));
         BDeposit.setHorizontalAlignment(SwingConstants.CENTER);
-        BDeposit.setBackground(CommonConstants.TEXT_COLOR);
+        BDeposit.setBackground(Constants.TEXT_COLOR);
         BDeposit.setBounds(125, 420, 250, 50);
         BDeposit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         BDeposit.addActionListener(onDeposit);
@@ -58,19 +48,19 @@ public class BankGUI extends Form {
         JButton BWithdraw = new JButton("Withdraw");
         BWithdraw.setFont(new Font("Dialog", Font.BOLD, 18));
         BWithdraw.setHorizontalAlignment(SwingConstants.CENTER);
-        BWithdraw.setBackground(CommonConstants.TEXT_COLOR);
+        BWithdraw.setBackground(Constants.TEXT_COLOR);
         BWithdraw.setBounds(125, 480, 250, 50);
         BWithdraw.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         BWithdraw.addActionListener(onWithdraw);
         add(BWithdraw);
 
-        JButton BHistory = new JButton("History");
+        JButton BHistory = new JButton("Logout");
         BHistory.setFont(new Font("Dialog", Font.BOLD, 18));
         BHistory.setHorizontalAlignment(SwingConstants.CENTER);
-        BHistory.setBackground(CommonConstants.TEXT_COLOR);
+        BHistory.setBackground(Constants.TEXT_COLOR);
         BHistory.setBounds(125, 540, 250, 50);
         BHistory.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        BHistory.addActionListener(onWithdraw);
+        BHistory.addActionListener(onLogout);
         add(BHistory);
     }
     private void deposit(){
@@ -79,4 +69,10 @@ public class BankGUI extends Form {
     private void withdraw(){
         new MoneyForm("Withdraw", user, this).setVisible(true);
     }
+
+    private void logout() {
+        new LoginGui().setVisible(true);
+        dispose();
+    }
+
 }
