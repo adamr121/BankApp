@@ -57,9 +57,7 @@ public class LoginGui extends Form {
         BLogin.setBackground(Constants.TEXT_COLOR);
         BLogin.setBounds(125, 520, 250, 50);
         BLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        BLogin.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        BLogin.addActionListener((e) -> {
                BoUser user = MyJDBC.validateLogin(TFUsername.getText(), TFPassword.getText());
                if(user != null) {
                    JOptionPane.showMessageDialog(LoginGui.this, "Login successful!");
@@ -67,7 +65,6 @@ public class LoginGui extends Form {
                    new BankGUI(user.getId()).setVisible(true);
                }
                else JOptionPane.showMessageDialog(LoginGui.this, "Login failed!");
-            }
         });
         add(BLogin);
         JLabel LRegister = new JLabel("Not a user? Register here");

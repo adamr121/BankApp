@@ -1,12 +1,10 @@
 package db;
 
 import constants.Constants;
-
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 
 public class MyJDBC {
@@ -14,6 +12,9 @@ public class MyJDBC {
     public static void setConnection(Connection connection) {
         MyJDBC.connection = connection;
     }
+
+
+    // Users table
     // true - register success
     // false - register failure
     public static boolean register(String username, String password){
@@ -87,6 +88,8 @@ public class MyJDBC {
             System.out.println(e.getErrorCode());
         }
     }
+
+    // Transactions table
     public static void recordTransaction(int user_id, float amount){
         try{
             PreparedStatement recordTransaction = connection.prepareStatement("INSERT INTO " + Constants.DB_TRANSACTION_HISTORY_TABLE + "(user_id, kwota, data_tran)" + " VALUES (?, ?, ?)");
@@ -99,5 +102,34 @@ public class MyJDBC {
         }catch (SQLException e) {
             System.out.println(e.getErrorCode());
         }
+    }
+
+    public static ResultSet getTransaction(int tranId) {
+        try{
+            PreparedStatement getTransaction = connection.prepareStatement("SELECT * FROM transactions WHERE tran_id = ?");
+            getTransaction.setString(1, Integer.toString(tranId));
+            return getTransaction.executeQuery();
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public static ArrayList<BoTransaction> getTransactionsByUser(int user_id, int maxNumber){
+        try{
+            ArrayList<BoTransaction> transactions = new ArrayList<>();
+            PreparedStatement getTransactionsByUser = connection.prepareStatement("SELECT tran_id FROM transactions WHERE user_id = ? ORDER BY tran_id DESC LIMIT " + Integer.toString(maxNumber));
+            getTransactionsByUser.setString(1, Integer.toString(user_id));
+            ResultSet result = getTransactionsByUser.executeQuery();
+            while(result.next()){
+                int tran_id =  result.getInt("tran_id");
+                transactions.add(new BoTransaction(tran_id));
+            }
+            return transactions;
+
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 }

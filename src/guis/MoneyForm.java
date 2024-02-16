@@ -13,48 +13,6 @@ public class MoneyForm extends JFrame {
     private final BoUser user;
     private JTextField TFInsertAmount;
     BankGUI bankMainPage;
-    private final ActionListener onDeposit = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if(!TFInsertAmount.getText().isEmpty()){
-                try{
-                    float amount = Float.parseFloat(TFInsertAmount.getText());
-                    if (amount <= 0) {
-                        JOptionPane.showMessageDialog(MoneyForm.this, "Input value has to be more than 0!");
-                        return;
-                    }
-                    float newAmount = user.getAmount()+amount;
-                    user.setAmount(newAmount);
-                    bankMainPage.LAmount.setText(Float.toString(newAmount));
-                    MyJDBC.recordTransaction(user.getId(), amount);
-                    dispose();
-                }catch(NumberFormatException exception){
-                    JOptionPane.showMessageDialog(MoneyForm.this, "Invalid input!");
-                }
-            }
-        }
-    };
-    private final ActionListener onWithDraw = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if(!TFInsertAmount.getText().isEmpty()){
-                try{
-                    float amount = Float.parseFloat(TFInsertAmount.getText());
-                    if (amount > user.getAmount()) {
-                        JOptionPane.showMessageDialog(MoneyForm.this, "Value to withdraw too big for this account");
-                        return;
-                    }
-                    float newAmount = user.getAmount() - amount;
-                    user.setAmount(newAmount);
-                    bankMainPage.LAmount.setText(Float.toString(newAmount));
-                    MyJDBC.recordTransaction(user.getId(), amount * - 1);
-                    dispose();
-                }catch(NumberFormatException exception){
-                    JOptionPane.showMessageDialog(MoneyForm.this, "Invalid input!");
-                }
-            }
-        }
-    };
     public MoneyForm(String title, BoUser user, BankGUI bankGui) {
         super(title);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -100,4 +58,46 @@ public class MoneyForm extends JFrame {
         else if (getTitle().equals("Withdraw")) BAction.addActionListener(onWithDraw);
         add(BAction);
     }
+    private final ActionListener onDeposit = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(!TFInsertAmount.getText().isEmpty()){
+                try{
+                    float amount = Float.parseFloat(TFInsertAmount.getText());
+                    if (amount <= 0) {
+                        JOptionPane.showMessageDialog(MoneyForm.this, "Input value has to be more than 0!");
+                        return;
+                    }
+                    float newAmount = user.getAmount()+amount;
+                    bankMainPage.LAmount.setText(Float.toString(newAmount));
+                        user.setAmount(newAmount);
+                        MyJDBC.recordTransaction(user.getId(), amount);
+                    dispose();
+                }catch(NumberFormatException exception){
+                    JOptionPane.showMessageDialog(MoneyForm.this, "Invalid input!");
+                }
+            }
+        }
+    };
+    private final ActionListener onWithDraw = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(!TFInsertAmount.getText().isEmpty()){
+                try{
+                    float amount = Float.parseFloat(TFInsertAmount.getText());
+                    if (amount > user.getAmount()) {
+                        JOptionPane.showMessageDialog(MoneyForm.this, "Value to withdraw too big for this account");
+                        return;
+                    }
+                    float newAmount = user.getAmount() - amount;
+                    user.setAmount(newAmount);
+                    bankMainPage.LAmount.setText(Float.toString(newAmount));
+                    MyJDBC.recordTransaction(user.getId(), amount * - 1);
+                    dispose();
+                }catch(NumberFormatException exception){
+                    JOptionPane.showMessageDialog(MoneyForm.this, "Invalid input!");
+                }
+            }
+        }
+    };
 }

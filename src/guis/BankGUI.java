@@ -36,6 +36,17 @@ public class BankGUI extends Form {
         LAmount.setFont(new Font("Dialog", Font.PLAIN, 30));
         add(LAmount);
 
+        JButton BHistory = new JButton("History");
+        BHistory.setFont(new Font("Dialog", Font.BOLD, 18));
+        BHistory.setHorizontalAlignment(SwingConstants.CENTER);
+        BHistory.setBackground(Constants.TEXT_COLOR);
+        BHistory.setBounds(125, 360, 250, 50);
+        BHistory.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        BHistory.addActionListener((e) ->{
+            new HistoryGUI(user, this).setVisible(true);
+        });
+        add(BHistory);
+
         JButton BDeposit = new JButton("Deposit");
         BDeposit.setFont(new Font("Dialog", Font.BOLD, 18));
         BDeposit.setHorizontalAlignment(SwingConstants.CENTER);
@@ -54,14 +65,14 @@ public class BankGUI extends Form {
         BWithdraw.addActionListener(onWithdraw);
         add(BWithdraw);
 
-        JButton BHistory = new JButton("Logout");
-        BHistory.setFont(new Font("Dialog", Font.BOLD, 18));
-        BHistory.setHorizontalAlignment(SwingConstants.CENTER);
-        BHistory.setBackground(Constants.TEXT_COLOR);
-        BHistory.setBounds(125, 540, 250, 50);
-        BHistory.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        BHistory.addActionListener(onLogout);
-        add(BHistory);
+        JButton BLogout = new JButton("Logout");
+        BLogout.setFont(new Font("Dialog", Font.BOLD, 18));
+        BLogout.setHorizontalAlignment(SwingConstants.CENTER);
+        BLogout.setBackground(Constants.TEXT_COLOR);
+        BLogout.setBounds(125, 540, 250, 50);
+        BLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        BLogout.addActionListener(onLogout);
+        add(BLogout);
     }
     private void deposit(){
         new MoneyForm("Deposit", user, this).setVisible(true);
