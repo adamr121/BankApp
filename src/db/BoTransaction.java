@@ -13,10 +13,10 @@ public class BoTransaction {
         ResultSet tran = MyJDBC.getTransaction(tran_id);
         try{
             tran.next();
-            this.tran_id = tran.getInt("tran_id");
-            this.user_id = tran.getInt("user_id");
-            this.amount = tran.getFloat("kwota");
-            this.date = tran.getString("data_tran");
+            this.tran_id = tran.getInt(T_transactionId);
+            this.user_id = tran.getInt(T_userId);
+            this.amount = tran.getFloat(T_amount);
+            this.date = tran.getString(T_date);
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
@@ -33,4 +33,8 @@ public class BoTransaction {
     public int getTran_id() {
         return tran_id;
     }
+    public static final String T_userId = "user_id";
+    public static final String T_transactionId = "tran_id";
+    public static final String T_amount = "kwota";
+    public static final String T_date = "data_tran";
 }

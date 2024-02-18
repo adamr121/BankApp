@@ -13,10 +13,7 @@ public class MyJDBC {
         MyJDBC.connection = connection;
     }
 
-
     // Users table
-    // true - register success
-    // false - register failure
     public static boolean register(String username, String password){
         try{
             if(!checkUser(username)){
@@ -106,7 +103,7 @@ public class MyJDBC {
 
     public static ResultSet getTransaction(int tranId) {
         try{
-            PreparedStatement getTransaction = connection.prepareStatement("SELECT * FROM transactions WHERE tran_id = ?");
+            PreparedStatement getTransaction = connection.prepareStatement("SELECT * FROM transactions WHERE "+ BoTransaction.T_transactionId + " = ?");
             getTransaction.setString(1, Integer.toString(tranId));
             return getTransaction.executeQuery();
         }catch (SQLException e){
@@ -118,7 +115,12 @@ public class MyJDBC {
     public static ArrayList<BoTransaction> getTransactionsByUser(int user_id, int maxNumber){
         try{
             ArrayList<BoTransaction> transactions = new ArrayList<>();
-            PreparedStatement getTransactionsByUser = connection.prepareStatement("SELECT tran_id FROM transactions WHERE user_id = ? ORDER BY tran_id DESC LIMIT " + Integer.toString(maxNumber));
+            PreparedStatement getTransactionsByUser = connection.prepareStatement(
+                    "SELECT " + BoTransaction.T_transactionId +
+                            " FROM transactions" +
+                            " WHERE " + BoTransaction.T_userId + "= ? " +
+                            " ORDER BY " + BoTransaction.T_transactionId +
+                            " DESC LIMIT " + maxNumber);
             getTransactionsByUser.setString(1, Integer.toString(user_id));
             ResultSet result = getTransactionsByUser.executeQuery();
             while(result.next()){
